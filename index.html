@@ -8,17 +8,17 @@
 </head>
 <body>
 
-  <!-- ===== Hero / Landing Section ===== -->
+  <!-- Hero / Landing -->
   <header id="heroSection">
     <h1>Find the Right Teacher or Student in One Place</h1>
     <p>Are you a student looking for expert tutoring? Or a teacher looking for students?</p>
-    <div class="hero‑buttons">
+    <div class="hero-buttons">
       <button id="btnStudent">I am a Student</button>
       <button id="btnTeacher">I am a Teacher</button>
     </div>
   </header>
 
-  <!-- ===== Sign Up Section ===== -->
+  <!-- Sign Up -->
   <section id="signupSection" style="display:none;">
     <h3>Sign Up</h3>
     <input type="text" id="signupName" placeholder="Full Name">
@@ -29,17 +29,19 @@
       <option value="teacher">Teacher</option>
     </select>
     <button id="signupBtn">Sign Up</button>
+    <p>Already have an account? <button id="showLoginBtn">Log In</button></p>
   </section>
 
-  <!-- ===== Log In Section ===== -->
+  <!-- Log In -->
   <section id="loginSection" style="display:none;">
     <h3>Log In</h3>
     <input type="email" id="loginEmail" placeholder="Email">
     <input type="password" id="loginPassword" placeholder="Password">
     <button id="loginBtn">Log In</button>
+    <p>Don't have an account? <button id="showSignupBtn">Sign Up</button></p>
   </section>
 
-  <!-- ===== Dashboard Section ===== -->
+  <!-- Dashboard -->
   <section id="dashboard" style="display:none;">
     <h2>Welcome!</h2>
     <div id="bookingSection" style="margin-top:20px;"></div>
@@ -50,16 +52,29 @@
   <script type="module" src="firestore.js"></script>
 
   <script type="module">
-    // Hero section logic to show correct form
+    // Hero section logic
+    const hero = document.getElementById("heroSection");
+    const signup = document.getElementById("signupSection");
+    const login = document.getElementById("loginSection");
+
     document.getElementById("btnStudent").addEventListener("click", () => {
-      document.getElementById("heroSection").style.display = "none";
-      document.getElementById("signupSection").style.display = "block";
+      hero.style.display = "none";
+      signup.style.display = "block";
       document.getElementById("signupRole").value = "student";
     });
     document.getElementById("btnTeacher").addEventListener("click", () => {
-      document.getElementById("heroSection").style.display = "none";
-      document.getElementById("signupSection").style.display = "block";
+      hero.style.display = "none";
+      signup.style.display = "block";
       document.getElementById("signupRole").value = "teacher";
+    });
+
+    document.getElementById("showLoginBtn").addEventListener("click", () => {
+      signup.style.display = "none";
+      login.style.display = "block";
+    });
+    document.getElementById("showSignupBtn").addEventListener("click", () => {
+      login.style.display = "none";
+      signup.style.display = "block";
     });
   </script>
 

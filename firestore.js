@@ -1,15 +1,13 @@
-// ===== IMPORTS =====
 import { app } from "./firebaseconfig.js";
-import { getFirestore, collection, addDoc, query, where, getDocs, doc, updateDoc } 
+import { getFirestore, collection, addDoc, query, where, getDocs, updateDoc, doc } 
   from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const db = getFirestore(app);
 
-// ===== CREATE BOOKING (Student) =====
+// STUDENT UI
 export async function showStudentBookingUI(studentId) {
   const bookingSection = document.getElementById("bookingSection");
 
-  // Load all teachers for dropdown
   const usersSnap = await getDocs(collection(db, "users"));
   const teachers = [];
   usersSnap.forEach(doc => {
@@ -36,30 +34,20 @@ export async function showStudentBookingUI(studentId) {
     const date = document.getElementById("bookingDate").value;
     const time = document.getElementById("bookingTime").value;
 
-    if (!teacherId || !date || !time) {
-      alert("Please fill all fields.");
-      return;
-    }
+    if (!teacherId || !date || !time) return alert("Fill all fields");
 
-    try {
-      await addDoc(collection(db, "bookings"), {
-        studentId: studentId,
-        teacherId: teacherId,
-        date: date,
-        time: time,
-        status: "pending" // default status
-      });
-      alert("Booking created!");
-      loadStudentBookings(studentId);
-    } catch (error) {
-      alert(error.message);
-    }
+    await addDoc(collection(db, "bookings"), {
+      studentId, teacherId, date, time, status: "pending"
+    });
+
+    alert("Booking created!");
+    loadStudentBookings(studentId);
   });
 
   loadStudentBookings(studentId);
 }
 
-// ===== LOAD STUDENT BOOKINGS =====
+// LOAD STUDENT BOOKINGS
 async function loadStudentBookings(studentId) {
   const bookingList = document.getElementById("bookingList");
   bookingList.innerHTML = "<h4>Your Bookings:</h4>";
@@ -78,10 +66,7 @@ async function loadStudentBookings(studentId) {
     let teacherName = b.teacherId;
     teacherSnap.forEach(tDoc => { teacherName = tDoc.data().name; });
 
-    // Color code
-    let color = "yellow";
-    if (b.status === "confirmed") color = "green";
-    else if (b.status === "cancelled") color = "red";
+    let color = b.status === "confirmed" ? "green" : b.status === "cancelled" ? "red" : "yellow";
 
     bookingList.innerHTML += `
       <div style="border:1px solid #fff; padding:8px; margin:5px; border-radius:6px; background: rgba(255,255,255,0.1); color:${color};">
@@ -91,14 +76,13 @@ async function loadStudentBookings(studentId) {
   }
 }
 
-// ===== TEACHER DASHBOARD =====
+// TEACHER UI
 export async function showTeacherBookingUI(teacherId) {
   const bookingSection = document.getElementById("bookingSection");
   bookingSection.innerHTML = `<h3>Your Bookings</h3><div id="teacherBookingList"></div>`;
   loadTeacherBookings(teacherId);
 }
 
-// ===== LOAD TEACHER BOOKINGS =====
 async function loadTeacherBookings(teacherId) {
   const bookingList = document.getElementById("teacherBookingList");
   bookingList.innerHTML = "";
@@ -119,10 +103,7 @@ async function loadTeacherBookings(teacherId) {
     let studentName = b.studentId;
     studentSnap.forEach(sDoc => { studentName = sDoc.data().name; });
 
-    // Color code
-    let color = "yellow";
-    if (b.status === "confirmed") color = "green";
-    else if (b.status === "cancelled") color = "red";
+    let color = b.status === "confirmed" ? "green" : b.status === "cancelled" ? "red" : "yellow";
 
     bookingList.innerHTML += `
       <div style="border:1px solid #fff; padding:8px; margin:5px; border-radius:6px; background: rgba(255,255,255,0.1); color:${color}; display:flex; justify-content:space-between; align-items:center;">
@@ -135,7 +116,6 @@ async function loadTeacherBookings(teacherId) {
     `;
   }
 
-  // Add button listeners
   document.querySelectorAll(".confirmBtn").forEach(btn => {
     btn.addEventListener("click", async (e) => {
       const id = e.target.dataset.id;
