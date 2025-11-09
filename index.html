@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Teacher Booking Platform</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== Hero / Landing Section ===== -->
+  <header id="heroSection">
+    <h1>Find the Right Teacher or Student in One Place</h1>
+    <p>Are you a student looking for expert tutoring? Or a teacher looking for students?</p>
+    <div class="hero‑buttons">
+      <button id="btnStudent">I am a Student</button>
+      <button id="btnTeacher">I am a Teacher</button>
+    </div>
+  </header>
+
+  <!-- ===== Sign Up Section ===== -->
+  <section id="signupSection" style="display:none;">
+    <h3>Sign Up</h3>
+    <input type="text" id="signupName" placeholder="Full Name">
+    <input type="email" id="signupEmail" placeholder="Email">
+    <input type="password" id="signupPassword" placeholder="Password">
+    <select id="signupRole">
+      <option value="student">Student</option>
+      <option value="teacher">Teacher</option>
+    </select>
+    <button id="signupBtn">Sign Up</button>
+  </section>
+
+  <!-- ===== Log In Section ===== -->
+  <section id="loginSection" style="display:none;">
+    <h3>Log In</h3>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button id="loginBtn">Log In</button>
+  </section>
+
+  <!-- ===== Dashboard Section ===== -->
+  <section id="dashboard" style="display:none;">
+    <h2>Welcome!</h2>
+    <div id="bookingSection" style="margin-top:20px;"></div>
+    <button id="logoutBtn">Log Out</button>
+  </section>
+
+  <script type="module" src="auth.js"></script>
+  <script type="module" src="firestore.js"></script>
+
+  <script type="module">
+    // Hero section logic to show correct form
+    document.getElementById("btnStudent").addEventListener("click", () => {
+      document.getElementById("heroSection").style.display = "none";
+      document.getElementById("signupSection").style.display = "block";
+      document.getElementById("signupRole").value = "student";
+    });
+    document.getElementById("btnTeacher").addEventListener("click", () => {
+      document.getElementById("heroSection").style.display = "none";
+      document.getElementById("signupSection").style.display = "block";
+      document.getElementById("signupRole").value = "teacher";
+    });
+  </script>
+
+</body>
+</html>
