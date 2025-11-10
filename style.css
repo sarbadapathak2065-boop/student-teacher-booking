@@ -1,170 +1,66 @@
-/* ===== General Body ===== */
+/* General body */
 body {
-  font-family: 'Roboto', sans-serif;
-  background: #f9f9f9; /* soft light background */
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 40px 20px;
+  font-family: Arial, sans-serif;
+  background: #f0f0f0;
+  margin: 0;
+  padding: 0;
 }
 
-/* ===== Header / Hero ===== */
-header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-header h1 {
-  font-size: 32px;
-  margin-bottom: 8px;
-  color: #4a90e2; /* soft blue */
-}
-
-header p {
-  font-size: 18px;
-  color: #777;
-}
-
-/* ===== Hero Buttons ===== */
-.hero-buttons button {
-  background: #4a90e2;
-  color: #fff;
-  border: none;
-  padding: 12px 24px;
+/* Sections */
+section {
+  max-width: 400px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 20px 30px;
   border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  margin: 0 10px;
-  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.hero-buttons button:hover {
-  background: #357ABD;
-  transform: translateY(-2px);
-}
-
-/* ===== Container Styling ===== */
-#signupSection, #loginSection, #dashboard {
-  background: #fff; /* clean white cards */
-  padding: 30px 35px;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-  width: 350px;
-  margin: 20px auto;
+/* Headings */
+h2, h3 {
   text-align: center;
-  transition: all 0.3s ease;
-}
-
-#signupSection:hover, #loginSection:hover, #dashboard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
-}
-
-/* ===== Headings ===== */
-h2 {
-  font-size: 26px;
   margin-bottom: 20px;
-  color: #4a90e2;
 }
 
-h3 {
+/* Inputs & selects */
+input, select {
+  display: block;
+  width: 100%;
+  padding: 10px;
   margin-bottom: 15px;
-  font-size: 20px;
-  color: #333;
-}
-
-/* ===== Inputs ===== */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-select {
-  width: 90%;
-  padding: 12px 10px;
-  margin: 10px 0;
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid #ccc;
-  outline: none;
-  font-size: 14px;
-  background: #fafafa;
-  color: #333;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
-input::placeholder,
-select {
-  color: #999;
-}
-
-/* ===== Input Focus ===== */
-input:focus, select:focus {
-  border-color: #4a90e2;
-  box-shadow: 0 0 5px rgba(74,144,226,0.5);
-}
-
-/* ===== Buttons ===== */
+/* Buttons */
 button {
-  background: #4a90e2;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
   color: #fff;
-  font-weight: 600;
+  border: none;
+  font-size: 16px;
+  border-radius: 5px;
   cursor: pointer;
-  margin-top: 12px;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: 0.2s;
 }
 
 button:hover {
-  background: #357ABD;
-  transform: translateY(-2px);
+  background-color: #0056b3;
 }
 
-/* ===== Dashboard Styling ===== */
-#dashboard h2 {
-  font-size: 24px;
+/* Booking message */
+#message {
+  text-align: center;
+  margin-top: 15px;
+  color: green;
+  font-weight: bold;
+}
+
+/* Dashboard content */
+#dashboardContent {
+  text-align: center;
   margin-bottom: 20px;
-  color: #4a90e2;
-}
-
-#bookingSection {
-  text-align: left;
-  margin-top: 20px;
-}
-
-#bookingSection h3 {
-  font-size: 18px;
-  color: #555;
-  margin-bottom: 10px;
-}
-
-/* ===== Booking Cards ===== */
-#bookingSection div {
-  border: 1px solid #ddd;
-  padding: 12px;
-  margin: 6px 0;
-  border-radius: 8px;
-  background: #f8f8f8;
-  transition: all 0.2s ease;
-}
-
-#bookingSection div:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-/* ===== Responsive ===== */
-@media screen and (max-width: 450px) {
-  #signupSection, #loginSection, #dashboard {
-    width: 90%;
-    padding: 25px;
-  }
-
-  header h1 {
-    font-size: 28px;
-  }
-
-  header p {
-    font-size: 16px;
-  }
 }

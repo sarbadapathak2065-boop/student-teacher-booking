@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — Simple Booking</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <section id="dashboardSection">
+    <h2>Dashboard</h2>
+    <div id="dashboardContent"></div>
+
+    <label id="bookingLabel" for="bookingSelect">Book a Teacher:</label>
+    <select id="bookingSelect">
+      <option value="">--Select--</option>
+    </select>
+
+    <label for="timeInput">Time:</label>
+    <input type="text" id="timeInput" placeholder="e.g., 3pm">
+
+    <button id="bookBtn">Book</button>
+    <p id="message"></p>
+
+    <button id="logoutBtn" style="margin-top:15px;background:#ccc;color:#000">Log Out</button>
+  </section>
+
+  <script type="module">
+    import { app, auth } from "./firebaseconfig.js";
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+    const dashboardContent = document.getElementById("dashboardContent");
+    const bookingLabel = document.getElementById("bookingLabel");
+    const bookingSelect = document.getElementById("bookingSelect");
+    const timeInput = document.getElementById("timeInput");
+    const bookBtn = document.getElementById("bookBtn");
+    const message = document.getElementById("message");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    function showMessage(msg, color="green") {
+      message.innerText = msg;
+      message.style.color = color;
+    }
+
+    // Show dashboard info for logged in user
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      // Example: store role in localStorage on signup/login
+      const role = localStorage.getItem("role") || "student"; // default student
+
+      dashboardContent.innerHTML = `<p>Welcome, ${role.charAt(0).toUpperCase() + role.slice(1)}! UID: ${user.uid}</p>`;
+
+      // Populate dropdown based on role
+      bookingSelect.innerHTML = '<option value="">--Select--</option>';
+      if (role === "student") {
+        bookingLabel.innerText = "Book a Teacher:";
+        ["Teacher A", "Teacher B"].forEach(t => {
+          const opt = document.createElement("option");
+          opt.value = t;
+          opt.innerText = t;
+          bookingSelect.appendChild(opt);
+        });
+      } else if (role === "teacher") {
+        bookingLabel.innerText = "Book a Student:";
+        ["Student A", "Student B"].forEach(s => {
+          const opt = document.createElement("option");
+          opt.value = s;
+          opt.innerText = s;
+          bookingSelect.appendChild(opt);
+        });
+      }
+    });
+
+    bookBtn.onclick = () => {
+      const selected = bookingSelect.value;
+      const time = timeInput.value.trim();
+      if (!selected || !time) {
+        showMessage(`Please select ${bookingLabel.innerText.replace(":", "")} and enter time.`, "crimson");
+        return;
+      }
+      showMessage(`You booked ${selected} at ${time}!`);
+      bookingSelect.value = "";
+      timeInput.value = "";
+    };
+
+    logoutBtn.onclick = async () => {
+      await signOut(auth);
+      window.location.href = "index.html";
+    };
+  </script>
+</body>
+</html>

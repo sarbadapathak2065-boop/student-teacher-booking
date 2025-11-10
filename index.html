@@ -1,81 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Teacher Booking Platform</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Simple Booking — Sign Up / Log In</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Hero / Landing -->
-  <header id="heroSection">
-    <h1>Find the Right Teacher or Student in One Place</h1>
-    <p>Are you a student looking for expert tutoring? Or a teacher looking for students?</p>
-    <div class="hero-buttons">
-      <button id="btnStudent">I am a Student</button>
-      <button id="btnTeacher">I am a Teacher</button>
-    </div>
-  </header>
+  <section>
+    <h2><b>Signup / Login</b></h2>
 
-  <!-- Sign Up -->
-  <section id="signupSection" style="display:none;">
-    <h3>Sign Up</h3>
-    <input type="text" id="signupName" placeholder="Full Name">
-    <input type="email" id="signupEmail" placeholder="Email">
-    <input type="password" id="signupPassword" placeholder="Password">
-    <select id="signupRole">
+    <label>Full name</label>
+    <input id="name" placeholder="Full name" />
+
+    <label>Email</label>
+    <input id="email" placeholder="you@example.com" />
+
+    <label>Password (min 6 chars)</label>
+    <input id="password" type="password" placeholder="password" />
+
+    <label>Role</label>
+    <select id="role">
       <option value="student">Student</option>
       <option value="teacher">Teacher</option>
     </select>
+
     <button id="signupBtn">Sign Up</button>
-    <p>Already have an account? <button id="showLoginBtn">Log In</button></p>
-  </section>
+    <button id="loginBtn" style="margin-top:6px;background:#eee;color:#000">Log In</button>
 
-  <!-- Log In -->
-  <section id="loginSection" style="display:none;">
-    <h3>Log In</h3>
-    <input type="email" id="loginEmail" placeholder="Email">
-    <input type="password" id="loginPassword" placeholder="Password">
-    <button id="loginBtn">Log In</button>
-    <p>Don't have an account? <button id="showSignupBtn">Sign Up</button></p>
+    <p id="status"></p>
   </section>
-
-  <!-- Dashboard -->
-  <section id="dashboard" style="display:none;">
-    <h2>Welcome!</h2>
-    <div id="bookingSection" style="margin-top:20px;"></div>
-    <button id="logoutBtn">Log Out</button>
-  </section>
-
-  <script type="module" src="auth.js"></script>
-  <script type="module" src="firestore.js"></script>
 
   <script type="module">
-    // Hero section logic
-    const hero = document.getElementById("heroSection");
-    const signup = document.getElementById("signupSection");
-    const login = document.getElementById("loginSection");
+    import { app, auth, db } from "./firebaseconfig.js";
+    import { 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-    document.getElementById("btnStudent").addEventListener("click", () => {
-      hero.style.display = "none";
-      signup.style.display = "block";
-      document.getElementById("signupRole").value = "student";
-    });
-    document.getElementById("btnTeacher").addEventListener("click", () => {
-      hero.style.display = "none";
-      signup.style.display = "block";
-      document.getElementById("signupRole").value = "teacher";
-    });
+    const nameEl = document.getElementById("name");
+    const emailEl = document.getElementById("email");
+    const passwordEl = document.getElementById("password");
+    const roleEl = document.getElementById("role");
+    const statusEl = document.getElementById("status");
+    const signupBtn = document.getElementById("signupBtn");
+    const loginBtn = document.getElementById("loginBtn");
 
-    document.getElementById("showLoginBtn").addEventListener("click", () => {
-      signup.style.display = "none";
-      login.style.display = "block";
-    });
-    document.getElementById("showSignupBtn").addEventListener("click", () => {
-      login.style.display = "none";
-      signup.style.display = "block";
-    });
+    function setStatus(text, color="#444") {
+      statusEl.innerText = text;
+      statusEl.style.color = color;
+    }
+
+    function isValidEmail(em) {
+      return /^\S+@\S+\.\S+$/.test(em);
+    }
+
+    signupBtn.onclick = async () => {
+      const name = nameEl.value.trim();
+      const email = emailEl.value.trim();
+      const password = passwordEl.value;
+      const role = roleEl.value;
+
+      if (!name || !email || !password) return setStatus("Fill name, email, and password.", "crimson");
+      if (!isValidEmail(email)) return setStatus("Enter a valid email like you@example.com", "crimson");
+      if (password.length < 6) return setStatus("Password must be at least 6 characters.", "crimson");
+
+      try {
+        setStatus("Please wait — signing you up...", "#333");
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db, "users", userCred.user.uid), { name, email, role });
+
+        // Store role locally
+        localStorage.setItem("role", role);
+
+        setStatus("Account created! Redirecting...", "green");
+        setTimeout(() => window.location.href = "dashboard.html", 800);
+      } catch (err) {
+        setStatus(err.message, "crimson");
+      }
+    };
+
+    loginBtn.onclick = async () => {
+      const email = emailEl.value.trim();
+      const password = passwordEl.value;
+      if (!email || !password) return setStatus("Enter email and password.", "crimson");
+      if (!isValidEmail(email)) return setStatus("Enter a valid email.", "crimson");
+
+      try {
+        setStatus("Please wait — logging you in...", "#333");
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
+
+        // Fetch role from Firestore
+        const userDoc = await getDoc(doc(db, "users", userCred.user.uid));
+        if (userDoc.exists()) {
+          const role = userDoc.data().role;
+          localStorage.setItem("role", role);
+        }
+
+        setStatus("Login successful! Redirecting...", "green");
+        setTimeout(() => window.location.href = "dashboard.html", 800);
+      } catch (err) {
+        setStatus(err.message, "crimson");
+      }
+    };
   </script>
 
 </body>
