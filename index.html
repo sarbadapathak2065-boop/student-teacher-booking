@@ -1,218 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student-Teacher Booking</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #1e1e2f;
-      color: #e0e0e0;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    section {
-      max-width: 450px;
-      width: 100%;
-      background: #2c2c3c;
-      padding: 25px 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      margin: 15px;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #64ffda;
-    }
-    input, select {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border-radius: 6px;
-      border: none;
-      background: #3a3a50;
-      color: #fff;
-      font-size: 16px;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      border-radius: 6px;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    #signupBtn {
-      background-color: #64ffda;
-      color: #1e1e2f;
-      font-weight: bold;
-    }
-    #signupBtn:hover {
-      background-color: #52e0b5;
-    }
-    #loginBtn {
-      background-color: #444;
-      color: #fff;
-      font-weight: bold;
-    }
-    #loginBtn:hover {
-      background-color: #333;
-    }
-    #dashboardSection input, #dashboardSection select, #dashboardSection button {
-      margin-bottom: 12px;
-    }
-    #status, #message {
-      margin-top: 10px;
-      text-align: center;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student-Teacher Portal</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <section id="authSection">
-    <h2>Signup / Login</h2>
+<section class="hero">
+  <div class="overlay"></div>
 
-    <input id="name" placeholder="Full name" />
-    <input id="email" placeholder="you@example.com" />
-    <input id="password" type="password" placeholder="Password (min 6 chars)" />
+  <div class="hero-content">
+    <h1>Linking Students and Teachers</h1>
 
-    <select id="role">
-      <option value="student">Student</option>
-      <option value="teacher">Teacher</option>
-    </select>
+    <div class="login-box">
+      <h2>Login / Sign Up</h2>
+      <input type="text" id="name" placeholder="Full Name">
+      <input type="email" id="email" placeholder="Email">
+      <input type="password" id="password" placeholder="Password (min 6 chars)">
+      <select id="role">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+      </select>
+      <button id="signupBtn">Sign Up</button>
+      <button id="loginBtn" class="secondary-btn">Login</button>
+      <p id="message"></p>
+    </div>
+  </div>
+</section>
 
-    <button id="signupBtn">Sign Up</button>
-    <button id="loginBtn" style="margin-top:6px;">Log In</button>
+<script src="app.js"></script>
+<script>
+  // Redirect if already logged in
+  if(localStorage.getItem('currentUser')) window.location.href='dashboard.html';
 
-    <p id="status"></p>
-  </section>
-
-  <section id="dashboardSection" style="display:none;">
-    <h2>Dashboard</h2>
-    <div id="dashboardContent"></div>
-
-    <label id="bookingLabel" for="bookingSelect">Book a Teacher:</label>
-    <select id="bookingSelect">
-      <option value="">--Select--</option>
-    </select>
-
-    <label for="timeInput">Time:</label>
-    <input type="text" id="timeInput" placeholder="e.g., 3pm">
-
-    <button id="bookBtn">Book</button>
-    <p id="message"></p>
-
-    <button id="logoutBtn" style="margin-top:15px; background:#555; color:#fff">Log Out</button>
-  </section>
-
-  <script>
-    const authSection = document.getElementById('authSection');
-    const dashboardSection = document.getElementById('dashboardSection');
-    const nameEl = document.getElementById('name');
-    const emailEl = document.getElementById('email');
-    const passwordEl = document.getElementById('password');
-    const roleEl = document.getElementById('role');
-    const signupBtn = document.getElementById('signupBtn');
-    const loginBtn = document.getElementById('loginBtn');
-    const statusEl = document.getElementById('status');
-    const dashboardContent = document.getElementById('dashboardContent');
-    const bookingLabel = document.getElementById('bookingLabel');
-    const bookingSelect = document.getElementById('bookingSelect');
-    const timeInput = document.getElementById('timeInput');
-    const bookBtn = document.getElementById('bookBtn');
-    const message = document.getElementById('message');
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    const USERS_KEY = 'users';
-    const BOOKINGS_KEY = 'bookings';
-
-    function setStatus(text, color='#fff') { statusEl.innerText = text; statusEl.style.color = color; }
-    function showMessage(text, color='green') { message.innerText = text; message.style.color = color; }
-    function isValidEmail(email) { return /^\S+@\S+\.\S+$/.test(email); }
-    function loadUsers() { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
-    function saveUsers(users) { localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
-    function getCurrentUser() { return JSON.parse(localStorage.getItem('currentUser')); }
-    function setCurrentUser(user) { localStorage.setItem('currentUser', JSON.stringify(user)); }
-    function clearCurrentUser() { localStorage.removeItem('currentUser'); }
-
-    signupBtn.onclick = () => {
-      const name = nameEl.value.trim();
-      const email = emailEl.value.trim();
-      const password = passwordEl.value;
-      const role = roleEl.value;
-      if (!name || !email || !password) return setStatus('Fill all fields.', 'crimson');
-      if (!isValidEmail(email)) return setStatus('Invalid email.', 'crimson');
-      if (password.length < 6) return setStatus('Password min 6 chars.', 'crimson');
-      const users = loadUsers();
-      if (users.find(u=>u.email===email)) return setStatus('Email already exists.', 'crimson');
-      const newUser = { name, email, password, role };
-      users.push(newUser);
-      saveUsers(users);
-      setCurrentUser(newUser);
-      nameEl.value=''; emailEl.value=''; passwordEl.value='';
-      setStatus('Signup successful!', 'green');
-      setTimeout(showDashboard, 500);
-    };
-
-    loginBtn.onclick = () => {
-      const email = emailEl.value.trim();
-      const password = passwordEl.value;
-      if (!email || !password) return setStatus('Enter email and password.', 'crimson');
-      if (!isValidEmail(email)) return setStatus('Invalid email.', 'crimson');
-      const users = loadUsers();
-      const user = users.find(u => u.email===email && u.password===password);
-      if (!user) return setStatus('Email or password incorrect.', 'crimson');
-      setCurrentUser(user);
-      nameEl.value=''; emailEl.value=''; passwordEl.value='';
-      setStatus('Login successful!', 'green');
-      setTimeout(showDashboard, 500);
-    };
-
-    function showDashboard() {
-      const user = getCurrentUser();
-      if(!user){ authSection.style.display='block'; dashboardSection.style.display='none'; return; }
-      authSection.style.display='none'; dashboardSection.style.display='block';
-      dashboardContent.innerHTML=`<p>Welcome, ${user.name} (${user.role})</p>`;
-      bookingSelect.innerHTML='<option value="">--Select--</option>';
-      if(user.role==='student') ['Teacher A','Teacher B','Teacher C'].forEach(t=>{
-        const opt=document.createElement('option'); opt.value=t; opt.innerText=t; bookingSelect.appendChild(opt);
-      });
-      else ['Student A','Student B','Student C'].forEach(s=>{
-        const opt=document.createElement('option'); opt.value=s; opt.innerText=s; bookingSelect.appendChild(opt);
-      });
-      renderBookings();
-    }
-
-    function loadBookings(){ return JSON.parse(localStorage.getItem(BOOKINGS_KEY))||[]; }
-    function saveBookings(b){ localStorage.setItem(BOOKINGS_KEY,JSON.stringify(b)); }
-    function renderBookings(){
-      const user=getCurrentUser(); const bookings=loadBookings();
-      const ub=bookings.filter(b=>b.userEmail===user.email);
-      if(ub.length===0) showMessage('No bookings yet.', 'yellow');
-      else showMessage('Your bookings: '+ub.map(b=>`${b.with} at ${b.time}`).join(' | '));
-    }
-
-    bookBtn.onclick = () => {
-      const selected=bookingSelect.value; const time=timeInput.value.trim(); const user=getCurrentUser();
-      if(!selected||!time) return showMessage('Select and enter time.', 'crimson');
-      const bookings=loadBookings(); bookings.push({userEmail:user.email,with:selected,time}); saveBookings(bookings);
-      showMessage(`Booked ${selected} at ${time}!`);
-      bookingSelect.value=''; timeInput.value=''; renderBookings();
-    };
-
-    logoutBtn.onclick = () => { clearCurrentUser(); authSection.style.display='block'; dashboardSection.style.display='none'; setStatus('Logged out.', '#fff'); };
-
-    if(getCurrentUser()) showDashboard();
-  </script>
+  // Clear inputs on page load
+  window.addEventListener('load', ()=>{
+    document.getElementById('name').value='';
+    document.getElementById('email').value='';
+    document.getElementById('password').value='';
+    document.getElementById('role').value='student';
+  });
+</script>
 </body>
 </html>

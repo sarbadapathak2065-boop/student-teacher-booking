@@ -1,0 +1,117 @@
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+
+body, html { height:100%; width:100%; }
+
+.hero {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  width:100%;
+  background:url('student.png') center/cover no-repeat;
+  position:relative;
+}
+
+.overlay {
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.35);
+  z-index:1;
+}
+
+.hero-content {
+  position:relative;
+  z-index:2;
+  text-align:center;
+  color:white;
+}
+
+/* Headline */
+.hero-content h1 {
+  font-size:48px;
+  font-weight:700;
+  margin-bottom:25px;
+  text-shadow:0 0 10px rgba(0,0,0,0.7);
+}
+
+/* Login box */
+.login-box {
+  background:rgba(255,255,255,0.95);
+  padding:25px 30px;
+  border-radius:12px;
+  width:320px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.35);
+  backdrop-filter:blur(5px);
+  margin:0 auto;
+}
+
+.login-box h2 { text-align:center; margin-bottom:15px; color:#222; }
+
+.login-box input, .login-box select {
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  font-size:15px;
+}
+
+.login-box button {
+  width:100%;
+  margin-top:15px;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  background:#003c8f;
+  color:white;
+}
+
+.login-box button:hover { background:#002a63; }
+
+.secondary-btn { background:#e7e7e7; color:#333 !important; }
+.secondary-btn:hover { background:#cfcfcf; }
+
+#message { text-align:center; margin-top:10px; font-weight:600; color:#333; }
+
+/* Dashboard overrides */
+.dashboard-container {
+  max-width:600px;
+  margin:50px auto;
+  padding:25px 30px;
+  background:rgba(255,255,255,0.95);
+  border-radius:12px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.35);
+  backdrop-filter:blur(5px);
+}
+
+.dashboard-container h2 { text-align:center; margin-bottom:20px; color:#222; }
+
+.dashboard-container input, .dashboard-container select, .dashboard-container button {
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  font-size:15px;
+}
+
+.dashboard-container button {
+  background:#003c8f;
+  color:white;
+  font-weight:600;
+  border:none;
+  cursor:pointer;
+}
+
+.dashboard-container button:hover { background:#002a63; }
+
+.dashboard-container #message {
+  margin-top:15px;
+  text-align:center;
+  font-weight:600;
+  color:#333;
+}

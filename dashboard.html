@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - Student/Teacher</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="dashboard-container">
+  <h2>Dashboard</h2>
+  <div id="dashboardContent"></div>
+
+  <label for="bookingSelect">Book a Teacher/Student:</label>
+  <select id="bookingSelect">
+    <option value="">--Select--</option>
+  </select>
+
+  <label for="timeInput">Time:</label>
+  <input type="text" id="timeInput" placeholder="e.g., 3pm">
+
+  <button id="bookBtn">Book</button>
+  <p id="message"></p>
+
+  <button id="logoutBtn">Sign Out</button>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
